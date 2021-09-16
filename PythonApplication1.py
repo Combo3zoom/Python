@@ -32,11 +32,13 @@ def InputArr(n,arr):
 while True: 
     try:
         n = int(input('Enter count array: ' ))
+        while(n<=0):
+             n = int(input('Enter count array again, count must be more zero: ' ))
         arr=[]
         InputArr(n,arr)
         deleteDuplicates(arr)
         OutputArr(arr)
-    except UncorrectValue:
+    except ValueError:
         print("Syntax error, try again")
         continue 
     break
