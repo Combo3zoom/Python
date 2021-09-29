@@ -1,0 +1,61 @@
+def InputArray(array,size):  
+    for i in range(size):
+        array.append([])
+        for j in range(size):
+             check=True
+             while(check):
+                 try:
+                      array[i] += [float(input())]
+                      check=False
+                 except ValueError:
+                      print("re-enter element, try again")  
+                 
+    print()
+    return
+            
+def OutputArray(array,size):
+    for i in range(size):
+        print(array[i])
+    print()
+    return
+
+
+def MaxElementsInNegativeDiagonal(array,size):
+    currentElement=array[0][0]
+    listMinElements=[]
+    for i in range(size):
+        for j in range(size):
+            if(i==j):
+                currentElement=array[i][j]
+                if(currentElement<0):
+                    currentMin= array[j][0]
+                    for k in range(size):
+                        if(currentMin>array[j][k]):
+                            currentMin=array[j][k]
+                    listMinElements.append(currentMin)
+
+    if(listMinElements==[]):
+        print("negative elements are absent")
+        return 
+
+    max=listMinElements[0]
+    for i in range(len(listMinElements)):      
+        if(max<listMinElements[i]):
+            max=listMinElements[i]
+    print("Maximal elements: ",max)
+    return 
+
+while True:
+    try:
+        array = []
+        size=int(input("Enter array order: "))
+        while(size<=0):
+            size=int(input("Enter array order more 0: "))
+        InputArray(array,size)
+        OutputArray(array,size)
+        MaxElementsInNegativeDiagonal(array,size)
+    except ValueError:
+        print("Syntax error, try again ")
+        continue
+    break 
+
