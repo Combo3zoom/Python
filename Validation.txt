@@ -1,0 +1,64 @@
+import re
+
+
+def CheckCity(city):
+    rangeCity = ['Rome', 'Paris', 'Naples', 'Vienna']
+    for i in rangeCity:
+        if(city == i):
+            return city
+    raise ValueError("Uncorrect city")
+
+def CheckBudget(budget):
+    try:
+        newBudget = float(budget)
+    except TypeError:
+        raise TypeError("Uncorrect type")
+    return budget
+
+def Date(Date=""):
+    try:
+        newStartDate = Date
+        newStartDate = newStartDate.split(".")
+        day, mounth, year = int(newStartDate[0]), int(newStartDate[1]), int(newStartDate[2])
+
+        if day <= 0 or day >= 32:
+            raise ValueError("Day must be value between 1 and 31")
+        if mounth <= 0 or mounth >= 13:
+            raise ValueError("Mounth must be value between 1 and 12")
+
+        if mounth in (2, 4, 6, 9, 11) and day == 31:
+            raise ValueError("Second, fourth, sixth, nineth, eleventh mounth not must be 31 days")
+        if mounth == 2:
+            if day == 30:
+                raise ValueError("Second mounth haven't 30 days")
+            if not (year % 400 or (year % 4 == 0 and year % 100 != 0)):
+                if day == 29:
+                    raise ValueError("year isn't high")
+    except TypeError:
+        raise TypeError("uncorrect type")
+    return Date
+
+def IsNormalDates(startDates, endDates):
+    newStartDate = startDates
+    newStartDate = newStartDate.split(".")
+    day1, mounth1, year1 = int(newStartDate[0]), int(newStartDate[1]), int(newStartDate[2])
+
+    newStartDate = endDates
+    newStartDate = newStartDate.split(".")
+    day2, mounth2, year2 = int(newStartDate[0]), int(newStartDate[1]), int(newStartDate[2])
+
+    if year2 >= year1:
+        if mounth2 >= mounth1:
+            if day2 >= day1 + 5:
+                return True
+            raise ValueError("uncorrect end and start day")
+        raise ValueError("uncorrect end and start mounth")
+    raise ValueError("uncorrect end and start year")
+
+def CheckName(name):
+    if not re.fullmatch(r'[A-Z][a-z]{2,30}', name):
+        raise ValueError(name + ' is uncorrect name, name must consists of letters ')
+    return name
+
+
+

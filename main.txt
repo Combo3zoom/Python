@@ -1,0 +1,113 @@
+import Validation
+
+
+class Date:
+    def __init__(self, day, mounth, year):
+        self.day = day
+        self.mounth = mounth
+        self.year = year
+
+
+class Journey:
+    list = []
+
+
+    def __init__(self, city="", budget="", startDate="", endDate="", username=""):
+        self.addJourney(city, budget, startDate, endDate, username)
+
+
+    def addJourney(self, city="", budget="", startDate="", endDate="", username=""):
+        if username == "":
+            return
+        self.city = city
+        self.budget = budget
+        self.startDate = startDate
+        self.endDate = endDate
+        self.username = username
+        self.list.append([city, budget, startDate, endDate, username])
+        return
+
+    def getList(self):
+        return self.list
+
+    def print(self):
+        if self.list == None:
+            return
+        sizeList = len(self.list)
+        for i in range(sizeList):
+            for j in range(len(self.list[i])):
+                print(": " + self.list[i][j])
+            print('----------------------------------------')
+        return
+
+    def sortAndSum(self):
+        j = 1
+        sum = 0
+        for i in range(len(self.list) - 1):
+            Firstmoney = float(self.list[i][j])
+            Secondmoney = float(self.list[i+1][j])
+            if Firstmoney > Secondmoney:
+                self.list[i][j], self.list[i+1][j]  = self.list[i+1][j] , self.list[i][j]
+
+        for i in range(len(self.list)):
+            sum +=float(self.list[i][j])
+
+        writeFile("FileResult.txt", self.list)
+
+        return sum
+
+    def TheBestMounth(self):
+        j = 3
+
+        for i in range(len(list)):
+            newStartDate = self.list[i][j]
+            newStartDate = newStartDate.split(".")
+            mounth = int(newStartDate[1])
+        return
+
+
+
+def readFile(file="FileInformation.txt", values=Journey()):
+    attributes, list = [], []
+    ourFile = open(file, "r")
+    for line in ourFile:
+        line = line.strip()
+        if line == '----------------------------------------':
+            list.append(attributes)
+            attributes = []
+            continue
+        attributes += [line]
+    ourFile.close()
+
+    for i in range(len(list)):
+        first = Validation.Date(list[i][2])
+        second = Validation.Date(list[i][3])
+        Validation.IsNormalDates(first, second)
+        values.addJourney(Validation.CheckCity(list[i][0]), Validation.CheckBudget(list[i][1]), first, second, Validation.CheckName(list[i][4]))
+
+    return list
+
+def writeFile(file='FileResult.txt', list=None):
+    if list == None:
+        return
+    ourFile = open(file, "w")
+    sizeList = len(list)
+
+    for i in range(sizeList):
+        for j in range(len(list[i])):
+            ourFile.write(list[i][j])
+            ourFile.write('\n')
+        ourFile.write('----------------------------------------\n')
+
+    ourFile.close()
+    return
+
+def main():
+    a = Journey()
+    readFile()
+    writeFile('FileResult.txt', a.getList())
+    a.print()
+    a.sortAndSum()
+    return
+
+main()
