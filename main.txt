@@ -1,100 +1,113 @@
-# from JobFile import readFile
-from Container import Container
+import Validation
 
-class Receipt:
+
+class Date:
+    def __init__(self, day, mounth, year):
+        self.day = day
+        self.mounth = mounth
+        self.year = year
+
+
+class Journey:
     list = []
 
-    def __init__(self, container: Container = None):
-        self.addReceipt(container)
-        return
 
-    def addReceipt(self, container: Container = None):
-        if container == None:
+    def __init__(self, city="", budget="", startDate="", endDate="", username=""):
+        self.addJourney(city, budget, startDate, endDate, username)
+
+
+    def addJourney(self, city="", budget="", startDate="", endDate="", username=""):
+        if username == "":
             return
-        self.list.append(container)
+        self.city = city
+        self.budget = budget
+        self.startDate = startDate
+        self.endDate = endDate
+        self.username = username
+        self.list.append([city, budget, startDate, endDate, username])
         return
 
     def getList(self):
         return self.list
 
-    def print(self, index=None):
-        if index is not None:
-            for j in Container.dictionary:
-                print(j + ": " + getattr(self.list[index], j))
-            print('----------------------------------------')
+    def print(self):
+        if self.list == None:
             return
         sizeList = len(self.list)
         for i in range(sizeList):
-            for j in Container.dictionary:
-                print(j + ": " + getattr(self.list[i], j))
+            for j in range(len(self.list[i])):
+                print(": " + self.list[i][j])
             print('----------------------------------------')
         return
 
-    def find(self, val="", category=""):
-        a = False
-        saveList = []
-        for i in range(len(self.list)):
-            for j in Container.dictionary:
-                if a:
-                    a = False
-                    break
-                if category != "":
-                    j = category
-                attr = getattr(self.list[i], j)
-                for k in range(len(attr) - len(val) + 1):
-                    temp = ""
-                    for k2 in range(len(val)):
-                        temp += attr[k + k2]
-                    if (val == temp):
-                        saveList.append(self.list[i])
-                        a = True
-                        break
-        return saveList
-
-    def sort(self, category="ID"):
+    def sortAndSum(self):
+        j = 1
+        sum = 0
         for i in range(len(self.list) - 1):
-            for j in range(i + 1, len(self.list)):
-                first = getattr(self.list[i], category)
-                second = getattr(self.list[j], category)
-                lenght = len(first)
-                if len(first) > len(second):
-                    lenght = len(second)
-                for word in range(lenght):
-                    if category == "ID" or category == "amount":
-                        if (len(first) > len(second) or
-                                first[word] > second[word] and len(first) == len(second)):
-                            self.list[i], self.list[j] = self.list[j], self.list[i]
-                            break
-                        if first[word] <= second[word] and len(first) == len(second):
-                            break
-                    else:
-                        if first[word] > second[word]:
-                            self.list[i], self.list[j] = self.list[j], self.list[i]
-                            break
-                        if first[word] <= second[word]:
-                            break
-        return self.list
+            Firstmoney = float(self.list[i][j])
+            Secondmoney = float(self.list[i+1][j])
+            if Firstmoney > Secondmoney:
+                self.list[i][j], self.list[i+1][j]  = self.list[i+1][j] , self.list[i][j]
 
-    def deleteReceipt(self, category="ID", value=""):
-        currentList = self.list
-        newList = []
-        size = len(currentList)
-        j = 0
-        while j != size:
-            if value == getattr(currentList[j], category):
-                del currentList[j]
-                size -= 1
-            else:
-                j += 1
-
-        return
-
-
-
-'''
-    def EditReceipt(self, Id="", category="", value= ""):
         for i in range(len(self.list)):
-            if Id == getattr(self.list[i], "ID"):
+            sum +=float(self.list[i][j])
 
+        writeFile("FileResult.txt", self.list)
+
+        return sum
+
+    def TheBestMounth(self):
+        j = 3
+
+        for i in range(len(list)):
+            newStartDate = self.list[i][j]
+            newStartDate = newStartDate.split(".")
+            mounth = int(newStartDate[1])
         return
-'''
+
+
+
+def readFile(file="FileInformation.txt", values=Journey()):
+    attributes, list = [], []
+    ourFile = open(file, "r")
+    for line in ourFile:
+        line = line.strip()
+        if line == '----------------------------------------':
+            list.append(attributes)
+            attributes = []
+            continue
+        attributes += [line]
+    ourFile.close()
+
+    for i in range(len(list)):
+        first = Validation.Date(list[i][2])
+        second = Validation.Date(list[i][3])
+        Validation.IsNormalDates(first, second)
+        values.addJourney(Validation.CheckCity(list[i][0]), Validation.CheckBudget(list[i][1]), first, second, Validation.CheckName(list[i][4]))
+
+    return list
+
+def writeFile(file='FileResult.txt', list=None):
+    if list == None:
+        return
+    ourFile = open(file, "w")
+    sizeList = len(list)
+
+    for i in range(sizeList):
+        for j in range(len(list[i])):
+            ourFile.write(list[i][j])
+            ourFile.write('\n')
+        ourFile.write('----------------------------------------\n')
+
+    ourFile.close()
+    return
+
+def main():
+    a = Journey()
+    readFile()
+    writeFile('FileResult.txt', a.getList())
+    a.print()
+    a.sortAndSum()
+    return
+
+main()
