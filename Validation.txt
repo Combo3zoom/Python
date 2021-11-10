@@ -21,81 +21,96 @@ def ExistFile(file):
 
 def UserChoose(value):
     try:
-        a, b = 1, 7
+        a, b = 0, 7
         if (value == 'exit'):
             return value
         value = int(value)
-        if value < 0 and value > 7:
+        if value < a and value > b:
             raise ValueError("User must choose number between 1 to 7 or exit")
-    except ValueError:
-        raise ValueError("User must choose number between 1 to 7 or exit")
+    except ValueError as error:
+        print(error)
     return value
 
 
 def IsCategory(category):
-    for i in range(len(Container.dictionary)):
-        if category == Container.dictionary[i]:
-            return category
-    raise ValueError(category + " don't exist")
-
-
-def ChooseMenu(value):
-    value = IsIntValue(value)
-    first, last = 1, 4
-    if value == 'exit':
-        return value
-    if first < value < last:
-        return value
-    return
+    try:
+        for i in range(len(Container.dictionary)):
+            if category == Container.dictionary[i]:
+                return category
+        raise ValueError(category + " don't exist")
+    except ValueError as error:
+        print(error)
 
 
 def CheckID(ID):
-    if not re.fullmatch(r'[0-9]{0,6}', str(ID)):
-        raise ValueError(str(ID) + ' is Uncorrect ID, ID must be between [0,9]')
+    try:
+        if not re.fullmatch(r'[0-9]{0,6}', str(ID)):
+            raise ValueError(str(ID) + ' is incorrect ID')
+    except ValueError as error:
+        print(error)
+        return False
     return ID
 
 
 def CheckName(recipientName):
-    if not re.fullmatch(r'[A-Z][a-z]{2,30}', recipientName):
-        raise ValueError(recipientName + ' is uncorrect name, name must consists of letters ')
+    try:
+        if not re.fullmatch(r'[A-Z][a-z]{2,30}', recipientName):
+            raise ValueError(recipientName + ' is incorrect name, name must consists of letters ')
+    except ValueError as error:
+        print(error)
+        return False
     return recipientName
 
 
 def CheckIban(recipientIban):
-    if not recipientIban[:2] == "UA":
-        raise ValueError("the first two letters must begin with UA on IBAN ")
-    a = recipientIban[10:15]
-    if not recipientIban[10:15] == "00000":
-        raise ValueError("from the tenth to the fifteenth position must contain zeros")
-    IsIntValue(recipientIban[15:30])
+    try:
+        if not recipientIban[:2] == "UA":
+            raise ValueError("the first two letters must begin with UA on IBAN ")
+        if not recipientIban[10:15] == "00000":
+            raise ValueError("from the tenth to the fifteenth position must contain zeros")
+        IsIntValue(recipientIban[15:30])
+    except ValueError as error:
+        print(error)
+        return False
     return recipientIban
 
 
 def CheckBank(bank):
-    if not re.fullmatch(r'[a-z]{2,30}', str(bank)):
-        raise ValueError(bank + ' is uncorrect bank, bank consists of letters ')
-    rangeBanks = ['privatbank', 'universalbank']
-    for i in rangeBanks:
-        if bank == i:
-            return bank
+    try:
+        if not re.fullmatch(r'[a-z]{2,30}', str(bank)):
+            raise ValueError(bank + ' is incorrect bank, bank consists of letters ')
+        rangeBanks = ['privatbank', 'universalbank']
+        for i in rangeBanks:
+            if bank == i:
+                return bank
+    except ValueError as error:
+        print(error)
+        return False
 
-    raise ValueError(bank + " isn't bank")
+    return
 
 
 def CheckPaymentType(paymentType):
-    if not re.fullmatch(r'[a-z]{2,30}', str(paymentType)):
-        print(str(paymentType) + ' is uncorrect bank, bank consists of letters ')
-        raise ValueError
-    rangePaymentType = ['handle', 'card', 'NFC']
-    for i in rangePaymentType:
-        if paymentType == i:
-            return paymentType
-    raise ValueError(paymentType + " isn't payment type")
+    try:
+        if not re.fullmatch(r'[a-z]{2,30}', str(paymentType)):
+            raise ValueError(str(paymentType) + ' is incorrect type, payment type consists of letters ')
+        rangePaymentType = ['handle', 'card', 'NFC']
+        for i in rangePaymentType:
+            if paymentType == i:
+                return paymentType
+        raise ValueError(paymentType + " isn't payment type")
+    except ValueError as error:
+        print(error)
+        return False
 
 
 def Amount(amount):
-    if not re.fullmatch(r'[0-9]{1,20}', str(amount)):
-        raise ValueError(str(amount) + ' is Uncorrect amount, amount must be int')
+    try:
+        if not re.fullmatch(r'[0-9]{1,20}', str(amount)):
+            raise ValueError(str(amount) + ' is incorrect amount, amount must be int')
+    except ValueError as error:
+        print(error)
+        return False
     return amount
 
 
@@ -119,8 +134,27 @@ def CheckMounthDay(value):
                     raise ValueError
     except ValueError as error:
         print(error)
-        raise ValueError
+        return False
     except TypeError:
         print('Uncorrect type for day/mounth/year')
-        raise TypeError
+        return False
     return value
+
+
+def CheckRandomValue(category, value):
+    IsCategory(category)
+    if category == Container.dictionary[0]:
+        return CheckID(value)
+    if category == Container.dictionary[1]:
+        return CheckName(value)
+    if category == Container.dictionary[2]:
+        return CheckIban(value)
+    if category == Container.dictionary[3]:
+        return CheckBank(value)
+    if category == Container.dictionary[4]:
+        return CheckPaymentType(value)
+    if category == Container.dictionary[5]:
+        return Amount(value)
+    if category == Container.dictionary[6]:
+        return CheckMounthDay(value)
+    return

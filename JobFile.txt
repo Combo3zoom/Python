@@ -15,13 +15,17 @@ def readFile(file="FileInformation.txt", values=Receipt()):
             continue
         attributes += [line]
     ourFile.close()
-
     for i in range(len(list)):
         container = Container(Validation.CheckID(list[i][0]), Validation.CheckName(list[i][1]),
                               Validation.CheckIban(list[i][2]), Validation.CheckBank(list[i][3]),
                               Validation.CheckPaymentType(list[i][4]), Validation.Amount(list[i][5]),
                               Validation.CheckMounthDay(list[i][6]))
         values.addReceipt(container)
+
+    for i in range(len(values.list)):
+        for j in Container.dictionary:
+            if getattr(values.list[i], j) is False:
+                raise Exception
 
     return list
 
@@ -38,4 +42,3 @@ def writeFile(file='FileResult.txt', list=None):
 
     ourFile.close()
     return
-

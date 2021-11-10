@@ -1,5 +1,5 @@
-# from JobFile import readFile
 from Container import Container
+
 
 class Receipt:
     list = []
@@ -17,12 +17,7 @@ class Receipt:
     def getList(self):
         return self.list
 
-    def print(self, index=None):
-        if index is not None:
-            for j in Container.dictionary:
-                print(j + ": " + getattr(self.list[index], j))
-            print('----------------------------------------')
-            return
+    def print(self):
         sizeList = len(self.list)
         for i in range(sizeList):
             for j in Container.dictionary:
@@ -30,7 +25,7 @@ class Receipt:
             print('----------------------------------------')
         return
 
-    def find(self, val="", category=""):
+    def find(self, category="", val=""):
         a = False
         saveList = []
         for i in range(len(self.list)):
@@ -49,6 +44,11 @@ class Receipt:
                         saveList.append(self.list[i])
                         a = True
                         break
+
+        for i in range(len(saveList)):
+            for j in Container.dictionary:
+                print(j + ": " + getattr(saveList[i], j))
+            print('----------------------------------------')
         return saveList
 
     def sort(self, category="ID"):
@@ -77,7 +77,6 @@ class Receipt:
 
     def deleteReceipt(self, category="ID", value=""):
         currentList = self.list
-        newList = []
         size = len(currentList)
         j = 0
         while j != size:
@@ -89,12 +88,9 @@ class Receipt:
 
         return
 
-
-
-'''
-    def EditReceipt(self, Id="", category="", value= ""):
+    def EditReceipt(self, Id="", category="", value=""):
         for i in range(len(self.list)):
             if Id == getattr(self.list[i], "ID"):
-
-        return
-'''
+                setattr(self.list[i], category, value)
+                break
+        return self.list
