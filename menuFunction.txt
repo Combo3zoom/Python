@@ -45,7 +45,6 @@ def printAll(a):
 def foundSomething(a):
     category = Validation.IsCategory(input("Enter categoty: "))
     value = input("Enter value, which you want to find: ")
-    Validation.CheckRandomValue(category, value)
 
     a.find(category, value)
     return
