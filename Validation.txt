@@ -143,18 +143,7 @@ def CheckMounthDay(value):
 
 def CheckRandomValue(category, value):
     IsCategory(category)
-    if category == Container.dictionary[0]:
-        return CheckID(value)
-    if category == Container.dictionary[1]:
-        return CheckName(value)
-    if category == Container.dictionary[2]:
-        return CheckIban(value)
-    if category == Container.dictionary[3]:
-        return CheckBank(value)
-    if category == Container.dictionary[4]:
-        return CheckPaymentType(value)
-    if category == Container.dictionary[5]:
-        return Amount(value)
-    if category == Container.dictionary[6]:
-        return CheckMounthDay(value)
-    return
+    dictionary = {"ID": CheckID, "recipientName": CheckName, "recipientIban": CheckIban, "bank": CheckBank,
+                  "PaymentType": CheckPaymentType, "amount": Amount, "paymentDatetime": CheckMounthDay}
+
+    return dictionary[category](value)
