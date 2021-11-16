@@ -1,0 +1,76 @@
+import Validation
+from main import Receipt
+from Container import Container
+from JobFile import readFile, writeFile
+
+
+def UserChoosee():
+    userChoose = Validation.UserChoose(input("Enter 1 - 8 or exit: "))
+    return userChoose
+
+def addReceiptHandle(a):
+    a.addReceipt(Container(Validation.CheckID(input("Enter ID: ")),
+                           Validation.CheckName(input("Enter name: ")),
+                           Validation.CheckIban(input("Enter iban: ")),
+                           Validation.CheckBank(input("Enter bank(privatbank or universalbank): ")),
+                           Validation.CheckPaymentType(input("Enter payment type(card, NFC): ")),
+                           Validation.Amount(input("Enter amount money: ")),
+                           Validation.CheckMounthDay(input("Enter date: "))))
+    return a
+
+
+def addReceiptFromFile(a):
+    readFile(Validation.ExistFile(input("Enter information file: ")))
+    return
+
+
+def writeReceiptInFile(a):
+    writeFile(Validation.ExistFile(input("Enter result file: ")), a.getList())
+    return
+
+
+def printAll(a):
+    a.print()
+    return
+
+
+def foundSomething(a):
+    print("Select one of the categories: \n"
+          "ID, recipientName, recipientIban, bank, paymentType, amount, paymentDatetime")
+
+    category = Validation.IsCategory(input("Enter categoty: "))
+    value = input("Enter value, which you want to find: ")
+    Validation.CheckRandomValue(category, value)
+
+    a.find(category, value)
+    return
+
+
+def sortReceipt(a):
+    print("Select one of the categories: \n"
+          "ID, recipientName, recipientIban, bank, paymentType, amount, paymentDatetime")
+    a.sort(Validation.IsCategory(input("Enter category: ")))
+    return
+
+
+def deleteReceipt(a):
+    print("Select one of the categories: \n"
+          "ID, recipientName, recipientIban, bank, paymentType, amount, paymentDatetime")
+    category = Validation.IsCategory(input("Enter categoty: "))
+
+    value = input("Enter value, which want to delete ")
+    Validation.CheckRandomValue(category, value)
+
+    a.deleteReceipt(category, value),
+    writeFile('FileResult.txt', a.getList())
+    return a
+
+
+def editReceipt(a):
+    id = Validation.CheckID(input("Enter id element, which want to edit: "))
+    category = Validation.IsCategory(input("Enter categoty: "))
+    value = input("Enter value, which want to replace ")
+    Validation.CheckRandomValue(category, value)
+
+    a.EditReceipt(id, category, value)
+    return a

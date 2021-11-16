@@ -1,0 +1,57 @@
+from main import Receipt
+import menuFunction
+
+def menu():
+    a = Receipt()
+    while True:
+        print('---------------------------------------')
+        try:
+            print('1 - add receipt handle\n'
+                  '2 - add receipt from file \n'
+                  '3 - write receipt in file\n'
+                  '4 - print all receipt\n'
+                  '5 - found something\n'
+                  '6 - sort receipt list\n'
+                  '7 - delete receipt\n'
+                  '8 - edit receipt\n'
+                  'exit - exit from program\n')
+
+            userChoose = menuFunction.UserChoosee()
+            if userChoose == 1:
+                a = menuFunction.addReceiptHandle(a)
+                continue
+            if userChoose == 2:
+                menuFunction.addReceiptFromFile(a)
+                #FileInformation.txt
+                continue
+            if userChoose == 3:
+                menuFunction.writeReceiptInFile(a)
+                #FileResult.txt
+                continue
+            if userChoose == 4:
+                menuFunction.printAll(a)
+                continue
+            if userChoose == 5:
+                menuFunction.foundSomething(a)
+                continue
+            if userChoose == 6:
+                menuFunction.sortReceipt(a)
+                continue
+            if userChoose == 7:
+                a = menuFunction.deleteReceipt(a)
+                continue
+            if userChoose == 8:
+                a = menuFunction.editReceipt(a)
+                continue
+            if userChoose == 'exit':
+                break
+            if userChoose != 'exit':
+                continue
+        except Exception as error:
+            print(error)
+            continue
+
+    return
+
+
+menu()
