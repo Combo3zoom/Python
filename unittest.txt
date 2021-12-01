@@ -1,0 +1,77 @@
+import unittest
+from main import Receipt
+from Container import Container
+import Validation
+import pytest
+
+
+class TestProgramMain(unittest.TestCase):
+    def testAddReceipt(self):
+        value = Receipt()
+        self.assertEqual(value.addReceipt(Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                                                    "card", "4000", "29.02.2020")), True)
+
+    def testDelete(self):
+        value = Receipt()
+        value.addReceipt(Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                                   "card", "4000", "29.02.2020"))
+        value.deleteReceipt('ID', '100')
+        self.assertEqual(value.getList(), [])
+
+    def testSort(self):
+        value = Receipt()
+        value.addReceipt(Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                                   "card", "4000", "29.02.2020"))
+        value.addReceipt(Container("42", "Alex", "UA1730000100000320900439089069", "universal",
+                                   "handle", "1532", "04.05.2012"))
+        value.addReceipt(Container("208", "Lusi", "UA173000010000032090043128721", "universal",
+                                   "NFC", "2000", "04.05.2012"))
+        value.sort('ID')
+        self.assertEqual(getattr(value.getList()[0], 'ID'), '42')
+
+
+class TestContainerMain(unittest.TestCase):
+
+    def testID(self):
+        value = Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                          "card", "4000", "29.02.2020")
+        self.assertEqual(value.getID(), "100")
+
+    def testName(self):
+        value = Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                          "card", "4000", "29.02.2020")
+        self.assertEqual(value.getrecipientName(), "Yura")
+
+    def testIban(self):
+        value = Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                          "card", "4000", "29.02.2020")
+        self.assertEqual(value.getrecipientIban(), "UA173000010000032003102901026")
+
+    def testBank(self):
+        value = Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                          "card", "4000", "29.02.2020")
+        self.assertEqual(value.getbank(), "privatbank")
+
+    def testPaymenttype(self):
+        value = Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                          "card", "4000", "29.02.2020")
+        self.assertEqual(value.getpaymentType(), "card")
+
+    def testAmount(self):
+        value = Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                          "card", "4000", "29.02.2020")
+        self.assertEqual(value.getamount(), "4000")
+
+    def testPaymentDatetime(self):
+        value = Container("100", "Yura", "UA173000010000032003102901026", "privatbank",
+                          "card", "4000", "29.02.2020")
+        self.assertEqual(value.getpaymentDatetime(), "29.02.2020")
+
+
+
+unittest.main()
+'''
+
+
+
+'''
