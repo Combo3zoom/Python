@@ -1,0 +1,142 @@
+import re
+from Container import Container
+
+
+def TryValueError(function):
+    def wrapper(value):
+        try:
+            return function(value)
+        except ValueError as error:
+            print(error)
+            return False
+
+    return wrapper
+
+
+def TryTypeError(function):
+    def wrapper(value):
+        try:
+            return function(value)
+        except TypeError as error:
+            print('Uncorrect type for day/mounth/year')
+            return False
+
+    return wrapper
+
+
+@TryValueError
+def IsIntValue(Value):
+    value = int(Value)
+    return value
+
+
+def ExistFile(file):
+    try:
+        ourFile = open(file)
+        ourFile.close()
+    except FileNotFoundError:
+        raise FileNotFoundError("File does not exist")
+    return file
+
+@TryValueError
+def UserChoose(value):
+    a, b = 0, 7
+    if value == 'exit':
+        return value
+    value = int(value)
+    if a > value > b:
+        raise ValueError("User must choose number between 1 to 7 or exit")
+
+    return value
+
+
+@TryValueError
+def IsCategory(category):
+    for i in range(len(Container.dictionary)):
+        if category == Container.dictionary[i]:
+            return category
+    raise ValueError(category + " don't exist")
+
+
+@TryValueError
+def CheckID(ID):
+    if not re.fullmatch(r'[0-9]{0,6}', str(ID)):
+        raise ValueError(str(ID) + ' is incorrect ID')
+    return ID
+
+
+@TryValueError
+def CheckName(recipientName):
+    if not re.fullmatch(r'[A-Z][a-z]{2,30}', recipientName):
+        raise ValueError(recipientName + ' is incorrect name, name must consists of letters ')
+    return recipientName
+
+
+@TryValueError
+def CheckIban(recipientIban):
+    if not recipientIban[:2] == "UA":
+        raise ValueError("the first two letters must begin with UA on IBAN ")
+    if not recipientIban[10:15] == "00000":
+        raise ValueError("from the tenth to the fifteenth position must contain zeros")
+    IsIntValue(recipientIban[15:30])
+
+    return recipientIban
+
+
+@TryValueError
+def CheckBank(bank):
+    if not re.fullmatch(r'[a-z]{2,30}', str(bank)):
+        raise ValueError(bank + ' is incorrect bank, bank consists of letters ')
+    rangeBanks = ['privatbank', 'universalbank']
+    for i in rangeBanks:
+        if bank == i:
+            return bank
+    return
+
+
+@TryValueError
+def CheckPaymentType(paymentType):
+    if not re.fullmatch(r'[a-z]{2,30}', str(paymentType)):
+        raise ValueError(str(paymentType) + ' is incorrect type, payment type consists of letters ')
+    rangePaymentType = ['handle', 'card', 'NFC']
+    for i in rangePaymentType:
+        if paymentType == i:
+            return paymentType
+    raise ValueError(paymentType + " isn't payment type")
+
+
+@TryValueError
+def Amount(amount):
+    if not re.fullmatch(r'[0-9]{1,20}', str(amount)):
+        raise ValueError(str(amount) + ' is incorrect amount, amount must be int')
+    return amount
+
+
+@TryTypeError
+@TryValueError
+def CheckMounthDay(value):
+    day, mounth, year = value[0] + value[1], value[3] + value[4], value[6:10]
+    day, mounth, year = int(day), int(mounth), int(year)
+    if day <= 0 or day >= 32:
+        raise ValueError("Day must be value between 1 and 31")
+    if mounth <= 0 or mounth >= 13:
+        raise ValueError("Mounth must be value between 1 and 12")
+
+    if mounth in (2, 4, 6, 9, 11) and day == 31:
+        raise ValueError("Second, fourth, sixth, nineth, eleventh mounth not must be 31 days")
+    if mounth == 2:
+        if day == 30:
+            raise ValueError("Second mounth haven't 30 days")
+        if not (year % 400 or (year % 4 == 0 and year % 100 != 0)):
+            if day == 29:
+                print("year isn't high")
+                raise ValueError
+    return value
+
+
+def CheckRandomValue(category, value):
+    IsCategory(category)
+    dictionary = {"ID": CheckID, "recipientName": CheckName, "recipientIban": CheckIban, "bank": CheckBank,
+                    "PaymentType": CheckPaymentType, "amount": Amount, "paymentDatetime": CheckMounthDay}
+
+    return dictionary[category](value)
