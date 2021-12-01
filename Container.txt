@@ -1,4 +1,6 @@
+
 class Container:
+    history = None
     dictionary = ["ID", "recipientName", "recipientIban", "bank", "paymentType", "amount",
                   "paymentDatetime"]
 
@@ -35,3 +37,7 @@ class Container:
 
     def getpaymentDatetime(self):
         return self.paymentDatetime
+
+
+
+

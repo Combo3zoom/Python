@@ -3,6 +3,11 @@ from Container import Container
 from main import Receipt
 
 
+import Validation
+from Container import Container
+from main import Receipt
+
+
 def readFile(file="FileInformation.txt", values=Receipt()):
     attributes = []
     list = []
@@ -22,10 +27,14 @@ def readFile(file="FileInformation.txt", values=Receipt()):
                               Validation.CheckMounthDay(list[i][6]))
         values.addReceipt(container)
 
-    for i in range(len(values.list)):
-        for j in Container.dictionary:
-            if getattr(values.list[i], j) is False:
-                raise Exception
+    try:
+        for i in range(len(values.list)):
+            for j in Container.dictionary:
+                if getattr(values.list[i], j) is False:
+                    print("Incorrect values ")
+                    raise Exception
+    except Exception as error:
+        print(error)
 
     return list
 

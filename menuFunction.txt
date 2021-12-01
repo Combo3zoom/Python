@@ -1,12 +1,24 @@
 import Validation
-from main import Receipt
 from Container import Container
 from JobFile import readFile, writeFile
+from Memento import History
+from main import Receipt
+
+
+
+
+def printCategories(function):
+    def wrapper(value):
+        print("Select one of the categories: \n"
+              "ID, recipientName, recipientIban, bank, paymentType, amount, paymentDatetime")
+        function(value)
+
+    return wrapper
 
 
 def UserChoosee():
-    userChoose = Validation.UserChoose(input("Enter 1 - 8 or exit: "))
-    return userChoose
+    return Validation.UserChoose(input("Enter 1 - 8 or exit: "))
+
 
 def addReceiptHandle(a):
     a.addReceipt(Container(Validation.CheckID(input("Enter ID: ")),
@@ -16,11 +28,14 @@ def addReceiptHandle(a):
                            Validation.CheckPaymentType(input("Enter payment type(card, NFC): ")),
                            Validation.Amount(input("Enter amount money: ")),
                            Validation.CheckMounthDay(input("Enter date: "))))
+
+  #  save.addState(a.getList())
     return a
 
 
 def addReceiptFromFile(a):
     readFile(Validation.ExistFile(input("Enter information file: ")))
+#    save.addState(a.getList())
     return
 
 
@@ -34,28 +49,25 @@ def printAll(a):
     return
 
 
+@printCategories
 def foundSomething(a):
-    print("Select one of the categories: \n"
-          "ID, recipientName, recipientIban, bank, paymentType, amount, paymentDatetime")
-
     category = Validation.IsCategory(input("Enter categoty: "))
     value = input("Enter value, which you want to find: ")
-    Validation.CheckRandomValue(category, value)
 
     a.find(category, value)
     return
 
 
+@printCategories
 def sortReceipt(a):
-    print("Select one of the categories: \n"
-          "ID, recipientName, recipientIban, bank, paymentType, amount, paymentDatetime")
     a.sort(Validation.IsCategory(input("Enter category: ")))
+
+  #  save.addState(a.getList())
     return
 
 
+@printCategories
 def deleteReceipt(a):
-    print("Select one of the categories: \n"
-          "ID, recipientName, recipientIban, bank, paymentType, amount, paymentDatetime")
     category = Validation.IsCategory(input("Enter categoty: "))
 
     value = input("Enter value, which want to delete ")
@@ -63,6 +75,8 @@ def deleteReceipt(a):
 
     a.deleteReceipt(category, value),
     writeFile('FileResult.txt', a.getList())
+
+  #  save.addState(a.getList())
     return a
 
 
@@ -73,4 +87,6 @@ def editReceipt(a):
     Validation.CheckRandomValue(category, value)
 
     a.EditReceipt(id, category, value)
+
+   # save.addState(a.getList())
     return a

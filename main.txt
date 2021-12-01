@@ -1,96 +1,73 @@
-from Container import Container
+from main import Receipt
+import menuFunction
+from Memento import History
 
+def menu():
+    a = Receipt()
+    save = History()
+    while True:
+        print('---------------------------------------')
+        try:
+            print('1 - add receipt handle\n'
+                  '2 - add receipt from file \n'
+                  '3 - write receipt in file\n'
+                  '4 - print all receipt\n'
+                  '5 - found something\n'
+                  '6 - sort receipt list\n'
+                  '7 - delete receipt\n'
+                  '8 - edit receipt\n'
+                  '9 - undo\n'
+                  '10 - redo\n'
+                  'exit - exit from program\n')
 
-class Receipt:
-    list = []
-
-    def __init__(self, container: Container = None):
-        self.addReceipt(container)
-        return
-
-    def addReceipt(self, container: Container = None):
-        if container == None:
-            return
-        self.list.append(container)
-        return
-
-    def getList(self):
-        return self.list
-
-    def print(self):
-        sizeList = len(self.list)
-        for i in range(sizeList):
-            for j in Container.dictionary:
-                print(j + ": " + getattr(self.list[i], j))
-            print('----------------------------------------')
-        return
-
-    def find(self, category="", val=""):
-        a = False
-        saveList = []
-        for i in range(len(self.list)):
-            for j in Container.dictionary:
-                if a:
-                    a = False
-                    break
-                if category != "":
-                    j = category
-                attr = getattr(self.list[i], j)
-                for k in range(len(attr) - len(val) + 1):
-                    temp = ""
-                    for k2 in range(len(val)):
-                        temp += attr[k + k2]
-                    if (val == temp):
-                        saveList.append(self.list[i])
-                        a = True
-                        break
-
-        for i in range(len(saveList)):
-            for j in Container.dictionary:
-                print(j + ": " + getattr(saveList[i], j))
-            print('----------------------------------------')
-        return saveList
-
-    def sort(self, category="ID"):
-        for i in range(len(self.list) - 1):
-            for j in range(i + 1, len(self.list)):
-                first = getattr(self.list[i], category)
-                second = getattr(self.list[j], category)
-                lenght = len(first)
-                if len(first) > len(second):
-                    lenght = len(second)
-                for word in range(lenght):
-                    if category == "ID" or category == "amount":
-                        if (len(first) > len(second) or
-                                first[word] > second[word] and len(first) == len(second)):
-                            self.list[i], self.list[j] = self.list[j], self.list[i]
-                            break
-                        if first[word] <= second[word] and len(first) == len(second):
-                            break
-                    else:
-                        if first[word] > second[word]:
-                            self.list[i], self.list[j] = self.list[j], self.list[i]
-                            break
-                        if first[word] <= second[word]:
-                            break
-        return self.list
-
-    def deleteReceipt(self, category="ID", value=""):
-        currentList = self.list
-        size = len(currentList)
-        j = 0
-        while j != size:
-            if value == getattr(currentList[j], category):
-                del currentList[j]
-                size -= 1
-            else:
-                j += 1
-
-        return
-
-    def EditReceipt(self, Id="", category="", value=""):
-        for i in range(len(self.list)):
-            if Id == getattr(self.list[i], "ID"):
-                setattr(self.list[i], category, value)
+            userChoose = menuFunction.UserChoosee()
+            if userChoose == 1:
+                a = menuFunction.addReceiptHandle(a)
+                save.addState(a.getList())
+                continue
+            if userChoose == 2:
+                menuFunction.addReceiptFromFile(a)
+                #FileInformation.txt
+                save.addState(a.getList())
+                continue
+            if userChoose == 3:
+                menuFunction.writeReceiptInFile(a)
+                #FileResult.txt
+                continue
+            if userChoose == 4:
+                menuFunction.printAll(a)
+                continue
+            if userChoose == 5:
+                menuFunction.foundSomething(a)
+                continue
+            if userChoose == 6:
+                menuFunction.sortReceipt(a)
+                save.addState(a.getList())
+                continue
+            if userChoose == 7:
+                a = menuFunction.deleteReceipt(a)
+                save.addState(a.getList())
+                continue
+            if userChoose == 8:
+                a = menuFunction.editReceipt(a)
+                save.addState(a.getList())
+                continue
+            if userChoose == 9:
+                a.list = save.undo()
+                b = 1
+                continue
+            if userChoose == 10:
+                a.list = save.redo()
+                continue
+            if userChoose == 'exit':
                 break
-        return self.list
+            if userChoose != 'exit':
+                continue
+        except Exception as error:
+            print(error)
+            continue
+
+    return
+
+
+menu()
