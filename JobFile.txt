@@ -1,0 +1,52 @@
+import Validation
+from Container import Container
+from main import Receipt
+
+import Validation
+from Container import Container
+from main import Receipt
+
+
+def readFile(file="FileInformation.txt", values=Receipt()):
+    attributes = []
+    list = []
+    ourFile = open(file, "r")
+    for line in ourFile:
+        line = line.strip()
+        if line == '----------------------------------------':
+            list.append(attributes)
+            attributes = []
+            continue
+        attributes += [line]
+    ourFile.close()
+    for i in range(len(list)):
+        container = Container(Validation.CheckID(list[i][0]), Validation.CheckName(list[i][1]),
+                              Validation.CheckIban(list[i][2]), Validation.CheckBank(list[i][3]),
+                              Validation.CheckPaymentType(list[i][4]), Validation.Amount(list[i][5]),
+                              Validation.CheckMounthDay(list[i][6]))
+        values.addReceipt(container)
+
+    try:
+        for i in range(len(values.list)):
+            for j in Container.dictionary:
+                if getattr(values.list[i], j) is False:
+                    print("Incorrect values ")
+                    raise Exception
+    except Exception as error:
+        print(error)
+
+    return len(list)
+
+
+def writeFile(file='FileResult.txt', list=None):
+    ourFile = open(file, "w")
+    sizeList = len(list)
+
+    for i in range(sizeList):
+        for j in Container.dictionary:
+            ourFile.write(getattr(list[i], j))
+            ourFile.write('\n')
+        ourFile.write('----------------------------------------\n')
+
+    ourFile.close()
+    return True

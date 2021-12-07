@@ -1,0 +1,93 @@
+# from JobFile import readFile
+from Container import Container
+
+class Receipt:
+    list = []
+
+    def __init__(self, container: Container = None):
+        self.addReceipt(container)
+        return
+
+    def addReceipt(self, container: Container = None):
+        if container is None:
+            return
+        if container.getrecipientName() is False:
+            return False
+
+        self.list.append(container)
+        return True
+
+    def getList(self):
+        return self.list
+
+    def print(self, index=None):
+        if index is not None:
+            for j in Container.dictionary:
+                print(j + ": " + getattr(self.list[index], j))
+            print('----------------------------------------')
+            return
+        sizeList = len(self.list)
+        for i in range(sizeList):
+            for j in Container.dictionary:
+                print(j + ": " + getattr(self.list[i], j))
+            print('----------------------------------------')
+        return True
+
+    def find(self, category="", val="" ):
+        a = False
+        saveList = []
+        for i in range(len(self.list)):
+            for j in Container.dictionary:
+                if a:
+                    a = False
+                    break
+                if category != "":
+                    j = category
+                attr = getattr(self.list[i], j)
+                for k in range(len(attr) - len(val) + 1):
+                    temp = ""
+                    for k2 in range(len(val)):
+                        temp += attr[k + k2]
+                    if val == temp:
+                        saveList.append(self.list[i])
+                        a = True
+                        break
+        return saveList
+
+    def sort(self, category="ID"):
+        for i in range(len(self.list) - 1):
+            for j in range(i + 1, len(self.list)):
+                first = getattr(self.list[i], category)
+                second = getattr(self.list[j], category)
+                lenght = len(first)
+                if len(first) > len(second):
+                    lenght = len(second)
+                for word in range(lenght):
+                    if category == "ID" or category == "amount":
+                        if (len(first) > len(second) or
+                                first[word] > second[word] and len(first) == len(second)):
+                            self.list[i], self.list[j] = self.list[j], self.list[i]
+                            break
+                        if first[word] <= second[word] and len(first) == len(second):
+                            break
+                    else:
+                        if first[word] > second[word]:
+                            self.list[i], self.list[j] = self.list[j], self.list[i]
+                            break
+                        if first[word] <= second[word]:
+                            break
+        return self.list
+
+    def deleteReceipt(self, category="ID", value=""):
+        currentList = self.list
+        size = len(currentList)
+        j = 0
+        while j != size:
+            a = getattr(currentList[j], category)
+            if value == a:
+                del currentList[j]
+                size -= 1
+            else:
+                j += 1
+
+        return currentList
